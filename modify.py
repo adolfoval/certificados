@@ -9,6 +9,7 @@ import re
 import subprocess
 from decimal import Decimal
 from functools import reduce
+import tempfile
 
 ###################################################
 #Datos de entrada, para propositos de funcionalidad
@@ -20,6 +21,7 @@ from functools import reduce
 inputs = []"""
 patterns = ["(Name)", "(CC)", "(Precio1)", "(Precio2)", "(Precio3)", "(Precio4)"]
 inputs = []
+temp_dir = tempfile.TemporaryDirectory(dir="temp") 
 
 for patter in patterns:
     entry = input(f"Please type an entry for {patter}")
@@ -66,11 +68,12 @@ doc.tables[0].rows[4].cells[1].paragraphs[0].runs[0].font.bold= True
 ####################################################
 #Se guarda el documento en pdf.
 ####################################################
-doc.save(f"saves/{inputs[0]}.docx")
+doc.save(f"{temp_dir.name}/{inputs[0]}.docx")
 subprocess.call(['soffice',
                 # '--headless',
                 '--convert-to',
                 'pdf', 
                 '--outdir',
                 "saves",
-                f"saves/{inputs[0]}.docx"])
+                f"{temp_dir.name}/{inputs[0]}.docx"])
+temp_dir.cleanup();
